@@ -1,0 +1,15 @@
+# 비밀 값 (API 키 등) - 절대 커밋 금지
+.env
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS / 에디터
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
