@@ -1,10 +1,10 @@
-# LINE Design System 색상 (designsystem.line.me > Foundation > Color)
+# SEED Design (당근) 라이트 모드 색상 — @seed-design/css 토큰 값
 [theme]
 base = "light"
-primaryColor = "#06C755"            # LINE Green
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F5F5F5" # Gray 150
-textColor = "#111111"                # Gray 870 (primaryText)
+primaryColor = "#FF6600"             # carrot-600 (bg-brand-solid)
+backgroundColor = "#FFFFFF"          # bg-layer-default
+secondaryBackgroundColor = "#F3F4F5" # gray-200 (bg-neutral-weak)
+textColor = "#1A1C20"                # gray-1000 (fg-neutral)
 font = "sans serif"
 
 [client]

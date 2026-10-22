@@ -31,51 +31,93 @@ MULTI_FILTERS = [
 # 조건이 바뀌면 지워야 하는 세션 값
 SESSION_KEYS = ("check", "postings", "seen_sn", "new", "new_title", "shown")
 
-# LINE Design System: 색상(Foundation > Color), 시스템 폰트, 좌우 16 여백
-CSS = """
+# SEED Design (당근, Apache-2.0) 공식 CSS + Pretendard (OFL)
+SEED_CSS = "https://cdn.jsdelivr.net/npm/@seed-design/css@3.0.3"
+CSS = f"""
 <style>
-html, body, .stApp, .stApp button, .stApp input {
-  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
-}
-.block-container { max-width: 760px; padding: 40px 16px 72px; }
-.page-title { font-size: 24px; font-weight: 800; color: #111111; letter-spacing: -0.01em; margin: 0 0 6px; }
-.lead { font-size: 14px; color: #777777; margin: 0; line-height: 1.5; }
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import url("{SEED_CSS}/base.min.css");
+@import url("{SEED_CSS}/recipes/list-item.css");
+@import url("{SEED_CSS}/recipes/badge.css");
 
-.sched { border-top: 1px solid #E8E8E8; border-bottom: 1px solid #E8E8E8; padding: 24px 0 18px; margin: 20px 0 4px; }
-.sched ol { list-style: none; display: flex; margin: 0; padding: 0; }
-.sched li { flex: 1; display: flex; flex-direction: column; gap: 10px; position: relative; margin: 0; }
-.sched li::before { content: ""; position: absolute; top: 7px; left: 16px; right: 0; height: 2px; background: #E8E8E8; }
-.sched li:last-child::before { display: none; }
-.sched li.done::before { background: #06C755; }
-.sched .dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #C8C8C8; background: #FFFFFF; box-sizing: border-box; position: relative; }
-.sched .done .dot { background: #06C755; border-color: #06C755; }
-.sched .next .dot { border-color: #06C755; }
-.sched .time { font-size: 28px; font-weight: 800; color: #B7B7B7; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1; }
-.sched .done .time { color: #06C755; }
-.sched .next .time { color: #111111; }
-.sched p { font-size: 13px; color: #777777; margin: 16px 0 0; }
+.stApp *:not([data-testid="stIconMaterial"]) {{
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+}}
+header[data-testid="stHeader"] {{ background: transparent; }}
+.block-container {{ max-width: 720px; padding: 48px 20px 80px; }}
 
-.sec-title { font-size: 16px; font-weight: 600; color: #111111; margin: 28px 0 2px; }
-.sec-title span { font-weight: 400; color: #777777; }
-.empty { font-size: 14px; color: #777777; padding: 14px 0; border-bottom: 1px solid #EFEFEF; margin: 0; }
+/* 머리말 */
+.page-title {{ font-size: var(--seed-font-size-t10); line-height: var(--seed-line-height-t10);
+  font-weight: var(--seed-font-weight-bold); color: var(--seed-color-fg-neutral); letter-spacing: -0.02em; margin: 0 0 4px; }}
+.lead {{ font-size: var(--seed-font-size-t4); line-height: 1.55; color: var(--seed-color-fg-neutral-subtle); margin: 0; }}
 
-.job { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; border-bottom: 1px solid #EFEFEF; }
-.job .job-title, .job .job-title:visited { font-size: 15px; font-weight: 600; color: #111111; text-decoration: none; line-height: 1.45; }
-.job a.job-title:hover { text-decoration: underline; }
-.job-meta { font-size: 13px; color: #777777; margin-top: 4px; line-height: 1.5; }
-.job-due { flex: none; text-align: right; font-size: 13px; color: #777777; white-space: nowrap; line-height: 1.5; }
-.job-due b { display: block; font-size: 14px; font-weight: 400; color: #555555; }
-.job-due b.soon { font-weight: 700; color: #111111; }
+/* 확인 시각 패널: 브랜드 색은 여기에만 */
+.sched {{ background: var(--seed-color-palette-carrot-100); border-radius: var(--seed-radius-r4);
+  padding: 22px 22px 18px; margin: 24px 0 8px; }}
+.sched ol {{ list-style: none; display: flex; margin: 0; padding: 0; }}
+.sched li {{ flex: 1; display: flex; flex-direction: column; gap: 12px; position: relative; margin: 0; }}
+.sched li::before {{ content: ""; position: absolute; top: 6px; left: 14px; right: 0; height: 2px;
+  background: var(--seed-color-palette-carrot-200); }}
+.sched li:last-child::before {{ display: none; }}
+.sched li.done::before {{ background: var(--seed-color-bg-brand-solid); }}
+.sched .dot {{ width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; position: relative;
+  border: 2px solid var(--seed-color-palette-carrot-200); background: var(--seed-color-palette-carrot-100); }}
+.sched .done .dot {{ background: var(--seed-color-bg-brand-solid); border-color: var(--seed-color-bg-brand-solid); }}
+.sched .next .dot {{ border-color: var(--seed-color-bg-brand-solid); background: #FFFFFF; }}
+.sched .time {{ font-size: var(--seed-font-size-t9); line-height: 1; font-weight: var(--seed-font-weight-bold);
+  letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--seed-color-palette-carrot-200); }}
+.sched .done .time {{ color: var(--seed-color-fg-neutral); }}
+.sched .next .time {{ color: var(--seed-color-fg-brand); }}
+.sched p {{ font-size: var(--seed-font-size-t3); line-height: 1.5; color: var(--seed-color-fg-neutral-muted); margin: 16px 0 0; }}
 
-.stButton button, .stFormSubmitButton button { border-radius: 6px; }
+/* 섹션 제목 */
+.sec-title {{ font-size: var(--seed-font-size-t6); line-height: var(--seed-line-height-t6);
+  font-weight: var(--seed-font-weight-bold); color: var(--seed-color-fg-neutral); margin: 36px 0 4px; }}
+.sec-title span {{ font-weight: var(--seed-font-weight-regular); color: var(--seed-color-fg-neutral-subtle); margin-left: 4px; }}
+.empty {{ font-size: var(--seed-font-size-t4); color: var(--seed-color-fg-neutral-subtle); padding: 16px 0; margin: 0;
+  border-bottom: 1px solid var(--seed-color-palette-gray-300); }}
 
-@media (max-width: 480px) {
-  .block-container { padding-top: 24px; }
-  .sched .time { font-size: 22px; }
-  .job { flex-direction: column; gap: 4px; }
-  .job-due { text-align: left; }
-  .job-due b { display: inline; margin-right: 6px; }
-}
+/* 공고 행: SEED list-item + badge */
+.job.seed-list-item__root {{ padding-inline: 0; padding-block: 16px; align-items: flex-start;
+  border-bottom: 1px solid var(--seed-color-palette-gray-300); text-decoration: none; color: inherit; }}
+a.job:hover .seed-list-item__title {{ text-decoration: underline; text-underline-offset: 3px; }}
+.job .seed-list-item__content {{ min-width: 0; gap: 4px; }}
+.job .seed-list-item__title {{ font-weight: var(--seed-font-weight-bold); letter-spacing: -0.01em; }}
+.job .seed-list-item__detail {{ font-size: var(--seed-font-size-t4); line-height: var(--seed-line-height-t4); }}
+.job .due {{ font-size: var(--seed-font-size-t3); line-height: var(--seed-line-height-t3); color: var(--seed-color-fg-neutral-muted); }}
+.job .seed-list-item__suffix {{ padding-top: 2px; }}
+
+/* Streamlit 위젯을 SEED 모양으로 */
+.stButton button, .stFormSubmitButton button {{ border-radius: var(--seed-radius-r2_5); border: none; min-height: 40px;
+  background: var(--seed-color-bg-neutral-weak); color: var(--seed-color-fg-neutral); font-weight: var(--seed-font-weight-bold); }}
+.stButton button:hover, .stFormSubmitButton button:hover {{ background: var(--seed-color-bg-neutral-weak-pressed); color: var(--seed-color-fg-neutral); }}
+.stFormSubmitButton button[kind="primaryFormSubmit"], .stButton button[kind="primary"] {{ min-height: 52px;
+  background: var(--seed-color-bg-brand-solid); color: var(--seed-color-fg-on-brand-solid); font-size: var(--seed-font-size-t5); }}
+.stFormSubmitButton button[kind="primaryFormSubmit"]:hover {{ background: var(--seed-color-bg-brand-solid-pressed); color: #FFFFFF; }}
+
+[data-testid="stWidgetLabel"] p {{ font-size: var(--seed-font-size-t5); font-weight: var(--seed-font-weight-bold);
+  color: var(--seed-color-fg-neutral); }}
+[data-testid="stButtonGroup"] {{ gap: 8px; }}
+[data-testid="stButtonGroup"] button[data-variant="pills"] {{
+  border-radius: var(--seed-radius-full); min-height: 36px; padding: 0 14px;
+  font-size: var(--seed-font-size-t4); font-weight: var(--seed-font-weight-medium);
+  background: #FFFFFF; color: var(--seed-color-fg-neutral); border: 1px solid var(--seed-color-stroke-neutral-weak); }}
+[data-testid="stButtonGroup"] button[data-variant="pills"]:hover {{ background: var(--seed-color-bg-layer-default-pressed);
+  color: var(--seed-color-fg-neutral); border-color: var(--seed-color-stroke-neutral-weak); }}
+[data-testid="stButtonGroup"] button[data-variant="pills"][data-selected="true"] {{
+  background: var(--seed-color-bg-neutral-inverted); color: var(--seed-color-fg-neutral-inverted);
+  border-color: var(--seed-color-bg-neutral-inverted); }}
+[data-testid="stButtonGroup"] button[data-variant="pills"] p {{ font-size: inherit; font-weight: inherit; color: inherit; }}
+[data-testid="stTextInput"] [data-baseweb="input"] {{ border-radius: var(--seed-radius-r2_5); background: #FFFFFF;
+  border: 1px solid var(--seed-color-stroke-neutral-weak); min-height: 48px; }}
+[data-testid="stTextInput"] input {{ background: #FFFFFF; font-size: var(--seed-font-size-t5); }}
+[data-testid="stForm"] [data-testid="stVerticalBlock"] {{ gap: 28px; }}
+
+@media (max-width: 480px) {{
+  .block-container {{ padding: 24px 16px 64px; }}
+  .sched {{ padding: 18px 16px 14px; }}
+  .sched .time {{ font-size: var(--seed-font-size-t7); }}
+}}
 </style>
 """
 
@@ -162,13 +204,10 @@ def schedule_html(now: datetime) -> str:
 
 
 def posting_html(p: dict) -> str:
+    """공고 한 줄. SEED list-item 구조에 D-day는 SEED badge."""
     esc = html.escape
     title = esc(p.get("recrutPbancTtl") or "제목 없음")
     url = p.get("srcUrl") or ""
-    title_tag = (
-        f'<a class="job-title" href="{esc(url, quote=True)}" target="_blank" rel="noopener">{title}</a>'
-        if url.startswith("http") else f'<span class="job-title">{title}</span>'
-    )
 
     regions = [r for r in (p.get("workRgnNmLst") or "").split(",") if r]
     region = ", ".join(regions[:3]) + (f" 외 {len(regions) - 3}곳" if len(regions) > 3 else "")
@@ -182,13 +221,22 @@ def posting_html(p: dict) -> str:
     end = p.get("pbancEndYmd") or ""
     due = f"{int(end[4:6])}월 {int(end[6:8])}일 마감" if len(end) == 8 else ""
     d = p.get("decimalDay")
-    left = "" if d is None else ("오늘 마감" if d <= 0 else f"{d}일 남음")
-    soon = ' class="soon"' if d is not None and d <= 3 else ""
+    badge = ""
+    if d is not None:
+        tone = "critical" if d <= 3 else "neutral"
+        label = "D-Day" if d <= 0 else f"D-{d}"
+        badge = (f'<span class="seed-badge__root seed-badge__root--size_medium seed-badge__root--variant_weak '
+                 f'seed-badge__root--tone_{tone}-variant_weak"><span class="seed-badge__label">{label}</span></span>')
 
-    return (
-        f'<div class="job"><div>{title_tag}<div class="job-meta">{meta}</div></div>'
-        f'<div class="job-due"><b{soon}>{left}</b>{due}</div></div>'
+    body = (
+        f'<span class="seed-list-item__content"><span class="seed-list-item__title">{title}</span>'
+        f'<span class="seed-list-item__detail">{meta}</span><span class="due">{due}</span></span>'
+        f'<span class="seed-list-item__suffix">{badge}</span>'
     )
+    if url.startswith("http"):
+        return (f'<a class="job seed-list-item__root" href="{esc(url, quote=True)}" '
+                f'target="_blank" rel="noopener">{body}</a>')
+    return f'<div class="job seed-list-item__root">{body}</div>'
 
 
 def section(title: str, count: int) -> None:
@@ -241,7 +289,7 @@ def live_board(filters: dict) -> None:
 
     postings = ss.postings
     section("진행 중인 공고", len(postings))
-    order = st.radio("정렬", ["최신 공고순", "마감 임박순"], horizontal=True,
+    order = st.pills("정렬", ["최신 공고순", "마감 임박순"], default="최신 공고순",
                      label_visibility="collapsed", key="sort")
     if order == "마감 임박순":
         postings = sorted(postings, key=lambda p: (p.get("pbancEndYmd") or "99999999", -p["recrutPblntSn"]))
@@ -261,20 +309,19 @@ def live_board(filters: dict) -> None:
 
 def setup_screen() -> None:
     st.html(f'<div class="page-title" role="heading" aria-level="1">{APP_TITLE}</div>'
-            '<p class="lead">관심 있는 조건을 골라주세요. 비워두면 전체 공고를 보여드려요. '
+            '<p class="lead">관심 있는 조건을 눌러 골라주세요. 아무것도 고르지 않으면 전체 공고를 보여드려요. '
             '고른 조건은 주소에 저장되니 북마크해 두면 다음에도 그대로 열려요.</p>')
     qp = st.query_params
     with st.form("setup", border=False):
         picked: dict[str, str] = {}
         for key, _, codes, label in MULTI_FILTERS:
             default = [c for c in qp.get(key, "").split(",") if c in codes]
-            chosen = st.multiselect(label, list(codes), default=default,
-                                    format_func=codes.get, placeholder="전체")
+            chosen = st.pills(label, list(codes), selection_mode="multi", default=default,
+                              format_func=codes.get)
             picked[key] = ",".join(chosen)
-        kinds = [""] + list(RECRUIT_KINDS)
         current = qp.get("se", "")
-        picked["se"] = st.selectbox("채용 구분", kinds, index=kinds.index(current) if current in kinds else 0,
-                                    format_func=lambda c: RECRUIT_KINDS.get(c, "전체"))
+        picked["se"] = st.pills("채용 구분", list(RECRUIT_KINDS), format_func=RECRUIT_KINDS.get,
+                                default=current if current in RECRUIT_KINDS else None) or ""
         picked["q"] = st.text_input("공고 제목에 들어갈 단어", value=qp.get("q", ""),
                                     placeholder="예: 행정, 전산").strip()
         if st.form_submit_button("이 조건으로 시작하기", type="primary", width="stretch"):
@@ -299,6 +346,9 @@ def main_screen() -> None:
 
 st.set_page_config(page_title=APP_TITLE, page_icon="📋", layout="centered")
 st.html(CSS)
+# SEED 토큰을 OS 다크 모드와 상관없이 라이트로 고정 (Streamlit 테마도 라이트)
+st.html('<script>document.documentElement.dataset.seedColorMode = "light-only";</script>',
+        unsafe_allow_javascript=True)
 
 if not get_api_key():
     st.error("API 키가 없어요. 로컬에서는 .env, Streamlit Cloud에서는 Secrets에 DATA_GO_KR_API_KEY 를 넣어주세요.")
