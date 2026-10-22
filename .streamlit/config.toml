@@ -1,0 +1,11 @@
+# LINE Design System 색상 (designsystem.line.me > Foundation > Color)
+[theme]
+base = "light"
+primaryColor = "#06C755"            # LINE Green
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F5F5F5" # Gray 150
+textColor = "#111111"                # Gray 870 (primaryText)
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"
