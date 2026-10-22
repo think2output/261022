@@ -152,27 +152,55 @@ _notifier = st.components.v2.component(
     isolate_styles=False,
     js="""
 export default function ({ data, parentElement }) {
-  // Streamlit Cloud 는 앱을 같은 주소의 프레임 안에서 띄우므로, 가능하면 최상위 창의 Notification 을 쓴다
-  const N = (() => { try { return window.top.Notification || window.Notification; } catch (e) { return window.Notification; } })();
+  // Streamlit Cloud 는 앱을 같은 주소의 프레임 안에서 띄우므로, 최상위 창의 Notification 을 먼저 쓰고 안 되면 현재 창 것을 쓴다
+  const candidates = [];
+  try { if (window.top.Notification) candidates.push(window.top.Notification); } catch (e) {}
+  if (window.Notification && !candidates.includes(window.Notification)) candidates.push(window.Notification);
+  const N = candidates[0];
+
   let root = parentElement.querySelector(":scope > .notif");
   if (!root) {
     root = document.createElement("div");
     root.className = "notif";
     parentElement.appendChild(root);
   }
-  const render = () => {
+
+  // 알림을 띄우고, 실패하면 이유를 문자열로 돌려준다
+  const show = (title, body, tag) => {
+    let lastError = null;
+    for (const C of candidates) {
+      try {
+        const note = new C(title, { body, tag });
+        note.onclick = () => { try { window.top.focus(); } catch (e) { window.focus(); } note.close(); };
+        return null;
+      } catch (e) { lastError = e; }
+    }
+    if (lastError && /constructor/i.test(String(lastError))) {
+      return "휴대폰 브라우저는 이 방식의 알림을 지원하지 않아요. PC 크롬에서 확인해 주세요.";
+    }
+    return "알림을 띄우지 못했어요. (" + (lastError ? lastError.message || lastError : "알 수 없는 오류") + ")";
+  };
+
+  const render = (message) => {
+    const extra = message ? `<span class="notif-msg err">${message}</span>` : "";
     if (!N) { root.innerHTML = '<span class="notif-msg">이 브라우저는 알림을 지원하지 않아요.</span>'; return; }
     if (N.permission === "granted") {
-      root.innerHTML = '<span class="notif-msg on">브라우저 알림이 켜져 있어요.</span>';
+      root.innerHTML = '<span class="notif-msg on">브라우저 알림이 켜져 있어요.</span>'
+        + '<button type="button" class="notif-btn notif-test">테스트 알림 보내기</button>' + extra;
+      root.querySelector("button").onclick = () => {
+        const err = show("테스트 알림이에요", "9시, 13시, 18시에 새 공고가 있으면 이렇게 알려드려요.", "test-" + Date.now());
+        render(err || "알림을 보냈어요. 화면 구석에 안 보이면 윈도우 알림 설정에서 Chrome 알림이 켜져 있는지 확인해 주세요.");
+      };
     } else if (N.permission === "denied") {
-      root.innerHTML = '<span class="notif-msg">알림이 차단되어 있어요. 주소창 왼쪽 아이콘에서 알림을 허용해 주세요.</span>';
+      root.innerHTML = '<span class="notif-msg">알림이 차단되어 있어요. 주소창 왼쪽 아이콘을 눌러 알림을 허용한 뒤 새로고침해 주세요.</span>';
     } else {
-      root.innerHTML = '<button type="button" class="notif-btn">브라우저 알림 받기</button>';
+      root.innerHTML = '<button type="button" class="notif-btn">브라우저 알림 받기</button>' + extra;
       root.querySelector("button").onclick = async () => {
         try { await N.requestPermission(); } catch (e) {}
-        render();
         if (N.permission === "granted") {
-          new N("알림이 켜졌어요", { body: "9시, 13시, 18시에 새 공고가 있으면 알려드릴게요." });
+          render(show("알림이 켜졌어요", "9시, 13시, 18시에 새 공고가 있으면 알려드릴게요.", "welcome"));
+        } else {
+          render(N.permission === "default" ? "권한 창이 닫혔어요. 다시 눌러 허용해 주세요." : null);
         }
       };
     }
@@ -186,8 +214,8 @@ export default function ({ data, parentElement }) {
     try { last = localStorage.getItem(KEY); } catch (e) {}
     if (last !== n.id) {
       try { localStorage.setItem(KEY, n.id); } catch (e) {}
-      const note = new N(n.title, { body: n.body, tag: n.id });
-      note.onclick = () => { try { window.top.focus(); } catch (e) { window.focus(); } note.close(); };
+      const err = show(n.title, n.body, n.id);
+      if (err) render(err);
     }
   }
 }

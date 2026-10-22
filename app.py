@@ -84,7 +84,8 @@ header[data-testid="stHeader"] {{ background: transparent; }}
 .sched p {{ font-size: var(--seed-font-size-t3); line-height: 1.5; color: var(--seed-color-fg-neutral-muted); margin: 16px 0 0; }}
 
 /* 브라우저 알림 줄 */
-.notif {{ display: flex; align-items: center; min-height: 36px; padding: 6px 2px 0; }}
+.notif {{ display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-height: 36px; padding: 6px 2px 0; }}
+.notif-msg.err {{ flex-basis: 100%; color: var(--seed-color-fg-neutral-muted); }}
 .notif-btn {{ border: 1px solid var(--seed-color-stroke-neutral-weak); background: #FFFFFF; color: var(--seed-color-fg-neutral);
   font-size: var(--seed-font-size-t3); font-weight: var(--seed-font-weight-bold); padding: 7px 14px;
   border-radius: var(--seed-radius-full); cursor: pointer; }}
