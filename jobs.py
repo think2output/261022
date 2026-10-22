@@ -5,6 +5,7 @@
 import requests
 
 API_URL = "https://apis.data.go.kr/1051000/recruitment/list"
+DETAIL_URL = "https://apis.data.go.kr/1051000/recruitment/detail"
 PAGE_SIZE = 100
 
 # 코드 정의서 v1.2 기준
@@ -33,6 +34,7 @@ NCS = {
     "R600021": "식품가공", "R600022": "인쇄·목재·가구·공예", "R600023": "환경·에너지·안전",
     "R600024": "농림어업", "R600025": "연구",
 }
+FILE_TYPES = {"A": "공고문", "B": "입사지원서", "C": "직무기술서", "Z": "기타"}
 
 
 def fetch_ongoing(api_key: str, filters: dict) -> list[dict]:
@@ -61,3 +63,14 @@ def fetch_ongoing(api_key: str, filters: dict) -> list[dict]:
         if not page or len(items) >= data.get("totalCount", 0):
             return items
         params["pageNo"] += 1
+
+
+def fetch_detail(api_key: str, sn: int) -> dict:
+    """공고 하나의 상세 정보. 목록에는 비어 있는 files(첨부파일), steps(모집 분야)가 채워져 온다."""
+    resp = requests.get(DETAIL_URL, params={"serviceKey": api_key, "sn": sn, "resultType": "json"}, timeout=30)
+    resp.raise_for_status()
+    data = resp.json()
+    if data.get("resultCode") != 200:
+        raise RuntimeError(f"API 오류: {data.get('resultMsg') or data}")
+    result = data.get("result")
+    return result[0] if isinstance(result, list) else result
